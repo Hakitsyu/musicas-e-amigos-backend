@@ -5,7 +5,6 @@ import { user } from "../service/facebook";
 
 class AuthenticationController {
     static verifyAuthentication = async (req: Request, res: Response) => {
-        console.log("TESTE");
         const { access_token: accessToken} = req.query;
         if (accessToken == null)
             return res.status(400).send({ error: { message: "Precisa ser inserido o access_token" } });
@@ -15,7 +14,6 @@ class AuthenticationController {
     }
 
     static authentication = async (req: Request, res: Response) => {
-        console.log("DSAD");
         const { facebook_token: facebookToken } = req.query;
         if (facebookToken == null)
             return res.status(400).send({ error: { message: "Precisa ser inserido o facebook_token" } });

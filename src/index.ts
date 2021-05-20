@@ -13,4 +13,5 @@ app.use(routes(instance.manager, instance.controller));
 
 const server = http.createServer(app);
 const socketConnection = initSocketConnection(instance.manager, server);
-server.listen(5050, () => console.log("Running server on port 5050..."));
+const port = process.env.PORT || 5050;
+server.listen(port, () => console.log(`Running server on port ${port}...`));

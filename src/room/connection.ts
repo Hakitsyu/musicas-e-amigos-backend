@@ -104,7 +104,6 @@ class Connection {
         if (member.isAdministrator() && video != null) {
             const room = this.manager.getRoom(roomId);
             if (room != null && room.videoManager.containsVideoById(video.id) && room.isConnectedById(member.id)) {
-                console.log("OPA");
                 room.videoManager.downVideoFromPlaylist(video.id);
                 room.emitAll("playlist", room.videoManager.playlist);
             }
@@ -143,7 +142,6 @@ class Connection {
                     room.emitAll("playlist", room.videoManager.playlist);
                 } else {
                     room.videoManager.playingVideo = { video: videoData, time: 0, isPaused: false };
-                    console.log(room.videoManager.lastPlayedVideo);
                     room.emitAll("play_video", room.videoManager.playingVideo, room.videoManager.lastPlayedVideo);
                 }
             }
@@ -176,7 +174,6 @@ class Connection {
         const { id, members, videoManager } = this.manager.getRoom(roomId);
         const clientMember = this.toClientMember(member);
 
-        console.log(clientMember);
         return {
             member: clientMember,
             room: {
@@ -207,7 +204,6 @@ class Connection {
     private isAdministrator = (member: Member) => member.group === MemberGroup.ADMINISTRATOR;
 
     private toClientMember = (member: Member) => {
-        console.log("ID", member.id);
         return {
             name: member.name,
             avatarUrl: member.avatarUrl,
