@@ -42,7 +42,6 @@ class Connection {
             return Connection.disconnect(socket, DisconnectedReason.ALREADY_CONNECTED);
 
         const member = this.manager.buildMember(user.name, user.email, user.picture.data.url, accessToken, socket);
-        //const member = this.manager.buildMember({ namuser.name, avatarUrl: user.picture.data.url, accessToken, connection: socket, email: user.email });
         this.manager.registerConnectedEmail(user.email);
         this.manager.getRoom(roomId).addMember(member);
 
@@ -50,11 +49,8 @@ class Connection {
             socket.emit("joined", this.onJoined(member, roomId));
             this.updateMembers(roomId);
             socket.on("disconnect", this.onDisconnect(member, roomId));
-            // Members Manager
             socket.on("ban", this.onBan(member, roomId));
-            // Emotes
             socket.on("emote", this.onEmote(member, roomId));
-            // Videos
             socket.on("new_video", this.onNewVideo(member, roomId));
             socket.on("delete_video", this.onDeleteVideo(member, roomId));
             socket.on("up_video", this.onUpVideo(member, roomId));
@@ -157,7 +153,7 @@ class Connection {
 
     private onEmote = (member: Member, roomId: string) => (emote: FlyingEmoteTypes) => {
         const room = this.manager.getRoom(roomId);
-        if (emote != null && Object.values(FlyingEmoteTypes).includes(emote) && room.isConnectedById(member.id) /*&& room.videoManager.isPlayingVideo()*/) {
+        if (emote != null && Object.values(FlyingEmoteTypes).includes(emote) && room.isConnectedById(member.id) && room.videoManager.isPlayingVideo()) {
             if (!member.emoteCooldown || member.emoteCooldown.can())
                 room.emitAll("emote", emote);
         }

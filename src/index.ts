@@ -14,6 +14,3 @@ app.use(routes(instance.manager, instance.controller));
 const server = http.createServer(app);
 const socketConnection = initSocketConnection(instance.manager, server);
 server.listen(5050, () => console.log("Running server on port 5050..."));
-
-// Logs (Membro entrou na sala; Membro saiu da sala)
-// Sistema de kikar usuarios
