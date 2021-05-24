@@ -161,14 +161,14 @@ export class VideoManager {
 export class Room {
     private _id: string;
     members: Member[];
-    bannedEmails: string[];
+    bannedMembers: Member[];
     emoteCooldown: { member: Member, date: Date }[];
     private _videoManager: VideoManager;
 
     constructor(id: string) {
         this._id = id;
         this.members = [];
-        this.bannedEmails = [];
+        this.bannedMembers = [];
         this.emoteCooldown = [];
         this._videoManager = new VideoManager();
     }
@@ -177,7 +177,7 @@ export class Room {
 
     removeMember = (member: Member) => this.members.splice(this.members.indexOf(member), 1);
     
-    ban = (member: Member) => this.bannedEmails = [...this.bannedEmails, member.email];
+    ban = (member: Member) => this.bannedMembers = [...this.bannedMembers, member];
 
     emitAll = (event: string, ...args: any) => this.members.forEach(member => member.connection.emit(event, ...args));
 
@@ -185,7 +185,7 @@ export class Room {
 
     getMemberById = (memberId: string): Member => this.members.find(member => member.id === memberId);
 
-    isBanned = (email: string): boolean => this.bannedEmails.find(bannedEmail => bannedEmail === email) != null;
+    isBanned = (email: string): boolean => this.bannedMembers.find(bannedMember => bannedMember.email === email) != null;
 
     isConnectedById = (memberId: string): boolean => this.members.find(member => member.id === memberId) != null;
 

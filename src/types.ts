@@ -73,3 +73,11 @@ export interface MessageContext {
     text?: string,
     gif?: any
 }
+
+export interface ClientRoom {
+    id: string,
+    members: ClientMember[],
+    bannedMembers: ClientMember[],
+    playingVideo: PlayingVideo,
+    playlist: Video[]
+}

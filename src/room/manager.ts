@@ -35,7 +35,6 @@ class Manager {
     deleteRoom = (roomId: string) => {
         const room = this.getRoom(roomId);
         if (room != null) {
-            // First disconnect all members
             room.members.forEach(member => Connection.disconnect(member.connection, DisconnectedReason.DELETED_ROOM));
             this.rooms.splice(this.rooms.indexOf(room), 1);
         }

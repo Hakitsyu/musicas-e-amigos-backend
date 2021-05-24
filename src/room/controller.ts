@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { Member } from "./index";
 import Manager from "./manager";
 
 class Controller {
@@ -11,7 +12,15 @@ class Controller {
     create = (req: Request, res: Response) => res.send({ id: this.manager.createRoom() });
 
     list = (req: Request, res: Response) => {
-        const rooms = this.manager.rooms.map(room => { return { id: room.id, membersCount: room.members.length, playingVideo: room.videoManager.playingVideo }});
+        const rooms = this.manager.rooms.map(room => {
+            return {
+                id: room.id,
+                members: room.members.map(member => this.toClientMember(member)),
+                bannedMembers: room.bannedMembers.map(bannedMember => this.toClientMember(bannedMember)),
+                playingVideo: room.videoManager.playingVideo,
+                playlist: room.videoManager.playlist
+            }
+        });
         return res.send(rooms);
     }
 
@@ -24,6 +33,15 @@ class Controller {
         
         this.manager.deleteRoom(roomId);
         return res.send({ id: roomId });
+    }
+
+    private toClientMember = (member: Member) => {
+        return {
+            name: member.name,
+            avatarUrl: member.avatarUrl,
+            group: member.group,
+            id: member.id
+        }
     }
 
     get manager() {

@@ -1,5 +1,5 @@
 import { Server, Socket } from "socket.io";
-import { DisconnectedReason, ClientRoom, MemberGroup, FlyingEmoteTypes, Video, MessageContext } from "../types";
+import { DisconnectedReason, MemberGroup, FlyingEmoteTypes, Video, MessageContext } from "../types";
 import Manager from "./manager";
 import { Member } from ".";
 import { Client } from "socket.io/dist/client";
@@ -171,7 +171,7 @@ class Connection {
     } 
 
     private onJoined = (member: Member, roomId: string) => {
-        const { id, members, videoManager } = this.manager.getRoom(roomId);
+        const { id, members, videoManager, emitAll } = this.manager.getRoom(roomId);
         const clientMember = this.toClientMember(member);
 
         return {
