@@ -10,7 +10,7 @@ class Manager {
     connectedEmails: string[]
 
     constructor() {
-        this._rooms = [new Room("wtf")];
+        this._rooms = [];
         this._admins = this.setupAdmins();
         this.connectedEmails = [];
     }
@@ -46,7 +46,7 @@ class Manager {
 
     getRoom = (id: string): Room => this.rooms.find(room => room.id === id);
 
-    private setupAdmins = () => ["vitorjesus452@hotmail.com"];
+    private setupAdmins = () => ["vitorjesus452@hotmail.com", "fabianojec@gmail.com"];
 
     private randomId = (length?: number) => {
         const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
