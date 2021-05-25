@@ -6,11 +6,12 @@ export const video = async (url: string): Promise<Video> | null => {
         const response = await axios.get(`https://youtube.com/oembed?url=${url}&format=json`);
         const id = Math.floor(Math.random() * 1000);
         const videoId = (() => {
-            if (url.startsWith("https://www.youtube.com/watch?v="))
-                return url.split("https://www.youtube.com/watch?v=")[1];
-            if (url.startsWith("https://youtu.be/"))
-                return url.split("https://youtu.be/")[1];
-            return null;
+            try {
+                const youTubeIdFromLink = (url) => url.match(/(?:https?:\/\/)?(?:www\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\/?\?v=|\/embed\/|\/)([^\s&]+)/)[1];
+                return youTubeIdFromLink(url);
+            } catch (ex) {
+                return null;
+            }
         })();
 
         if (videoId != null)
