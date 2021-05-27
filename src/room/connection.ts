@@ -1,5 +1,5 @@
 import { Server, Socket } from "socket.io";
-import { DisconnectedReason, MemberGroup, FlyingEmoteTypes, Video, MessageContext } from "../types";
+import { DisconnectedReason, MemberGroup, FlyingEmoteTypes, Video, MessageContext, MessageType } from "../types";
 import Manager from "./manager";
 import { Member } from ".";
 import { Client } from "socket.io/dist/client";
@@ -70,9 +70,10 @@ class Connection {
             if (!member.messageCooldown || member.messageCooldown.can()) {
                 if (message.text != null && message.text.length > 500)
                     return member.connection.emit("message_error", "A mensagem não pode ter mais que 500 caracteres.");
-                if ((message.text == null && message.gif == null) || (message.gif == null && message.text != null && message.text.trim() === ""))
-                    return;
-                room.emitAll("new_message", { author: this.toClientMember(member), context: message });
+                if ((message.text == null && message.gif == null) || (message.gif == null && message.text != null && message.text.trim() === "")) return;
+                if (message.answering && message.answering.id === member.id) return;
+                
+                room.emitAll("new_message", { author: this.toClientMember(member), context: {...message }, type: MessageType.DEFAULT});
             }
         }
     }
@@ -174,6 +175,7 @@ class Connection {
         const { id, members, videoManager, emitAll } = this.manager.getRoom(roomId);
         const clientMember = this.toClientMember(member);
 
+        emitAll("new_message", { author: clientMember, type: MessageType.JOIN_LOG });
         return {
             member: clientMember,
             room: {
@@ -186,7 +188,10 @@ class Connection {
     }
 
     private onDisconnect = (member: Member, roomId: string) => () => {
-        this.manager.getRoom(roomId).removeMember(member);
+        const room = this.manager.getRoom(roomId);
+        room.removeMember(member);
+        room.emitAll("new_message", { author: this.toClientMember(member), type: MessageType.LEAVE_LOG });
+
         this.manager.unregisterConnectedEmail(member.email);
         this.updateMembers(roomId);
     }

@@ -66,12 +66,20 @@ export interface PlayingVideo {
 
 export interface Message {
     author: ClientMember,
-    context: MessageContext
+    context: MessageContext,
+    type: MessageType
+}
+
+export enum MessageType {
+    DEFAULT,
+    JOIN_LOG,
+    LEAVE_LOG
 }
 
 export interface MessageContext {
     text?: string,
-    gif?: any
+    gif?: any,
+    answering?: ClientMember
 }
 
 export interface ClientRoom {
