@@ -146,7 +146,7 @@ export class VideoManager {
 
     removeFromPlaylist = (video: Video) => { 
         if (video != null)
-            this.playlist.splice(this.playlist.indexOf(video), 1);
+            this.playlist.splice(this.playlist.indexOf(this.getVideoById(video.id)), 1);
     }
 
     getVideoById = (id: number) => this.playlist.find(video => video.id === id);
